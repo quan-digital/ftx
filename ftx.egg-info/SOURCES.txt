@@ -1,0 +1,9 @@
+README.md
+setup.py
+ftx/__init__.py
+ftx/api.py
+ftx.egg-info/PKG-INFO
+ftx.egg-info/SOURCES.txt
+ftx.egg-info/dependency_links.txt
+ftx.egg-info/requires.txt
+ftx.egg-info/top_level.txt

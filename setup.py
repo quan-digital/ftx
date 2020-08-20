@@ -6,14 +6,14 @@ from os.path import join, dirname
 here = dirname(__file__)
 
 setup(name='ftx',
-      version='0.0.1',
+      version='1.0.1',
       description="Unofficial python3 FTX exchange API 1.0.1",
       long_description=open(join(here, 'README.md')).read(),
       license='MIT',
       author='thomgabriel',
       author_email='thomgabriel@protonmail.com',
-      url='https://github.com/quan-digital/ftx/tree/v1.0',
-      download_url = 'https://github.com/quan-digital/ftx/tree/v1.0',
+      url='https://github.com/quan-digital/ftx/tree/v1.1',
+      download_url = 'https://github.com/quan-digital/ftx/archive/v1.1.tar.gz',
       install_requires=[
         'requests==2.23.0',
         'schedule==0.6.0',
