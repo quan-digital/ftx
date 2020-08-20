@@ -7,13 +7,13 @@ here = dirname(__file__)
 
 setup(name='ftx',
       version='0.0.1',
-      description="Unofficial python3 FTX exchange API 1.0.",
+      description="Unofficial python3 FTX exchange API 1.0.1",
       long_description=open(join(here, 'README.md')).read(),
       license='MIT',
       author='thomgabriel',
       author_email='thomgabriel@protonmail.com',
-      url='https://github.com/thomgabriel/ftx',
-      download_url = 'https://github.com/thomgabriel/ftx/dist/ftx-0.0.1.tar.gz',
+      url='https://github.com/quan-digital/ftx/tree/v1.0',
+      download_url = 'https://github.com/quan-digital/ftx/tree/v1.0',
       install_requires=[
         'requests==2.23.0',
         'schedule==0.6.0',
