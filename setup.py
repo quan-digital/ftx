@@ -6,8 +6,8 @@ from os.path import join, dirname
 here = dirname(__file__)
 
 setup(name='ftx',
-      version='1.0.1',
-      description="Unofficial python3 FTX exchange API 1.0.1",
+      version='1.0.2',
+      description="Unofficial python3 FTX exchange API 1.0.2",
       long_description=open(join(here, 'README.md')).read(),
       license='MIT',
       author='thomgabriel',

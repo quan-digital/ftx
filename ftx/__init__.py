@@ -1,1 +1,1 @@
-from api import FtxClient
+from ftx.api import FtxClient
