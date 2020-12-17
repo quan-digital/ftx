@@ -166,8 +166,9 @@ class FtxClient:
         return self._get(f'wallet/balances')
 
     @authentication_required
-    def get_deposit_address(self, ticker: str) -> dict:
-        return self._get(f'wallet/deposit_address/{ticker}')
+    def get_deposit_address(self, ticker: str, method: str = None) -> dict:
+        method = f'?method={method}' if method else ''
+        return self._get(f'wallet/deposit_address/{ticker}{method}')
 
     @authentication_required
     def get_positions(self, show_avg_price: bool = False) -> List[dict]:
