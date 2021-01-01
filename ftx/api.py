@@ -1,10 +1,10 @@
+import hmac
 import time
 import urllib.parse
 from typing import Optional, Dict, Any, List
 
-from requests import Request, Session, Response
-import hmac
 from ciso8601 import parse_datetime
+from requests import Request, Session, Response
 
 
 class FtxClient:
@@ -30,7 +30,7 @@ class FtxClient:
         if self._api_key:
             self._sign_request(request)
         response = self._session.send(request.prepare())
-        
+
         return self._process_response(response)
 
     def _sign_request(self, request: Request) -> None:
@@ -46,7 +46,8 @@ class FtxClient:
         if self._subaccount_name:
             request.headers['FTX-SUBACCOUNT'] = urllib.parse.quote(self._subaccount_name)
 
-    def _process_response(self, response: Response) -> Any:
+    @staticmethod
+    def _process_response(response: Response) -> Any:
         try:
             data = response.json()
         except ValueError:
@@ -57,18 +58,19 @@ class FtxClient:
                 raise Exception(data['error'])
             return data['result']
 
-    
     #
     # Authentication required methods
     #
 
     def authentication_required(fn):
         """Annotation for methods that require auth."""
+
         def wrapped(self, *args, **kwargs):
             if not self._api_key:
                 raise TypeError("You must be authenticated to use this method")
             else:
-                return fn(self, *args, **kwargs)
+                return fn(self=self, *args, **kwargs)
+
         return wrapped
 
     @authentication_required
@@ -78,20 +80,31 @@ class FtxClient:
     @authentication_required
     def get_open_orders(self, market: str = None) -> List[dict]:
         return self._get(f'orders', {'market': market})
-    
+
     @authentication_required
-    def get_order_history(self, market: str = None, side: str = None, order_type: str = None, start_time: float = None, end_time: float = None) -> List[dict]:
-        return self._get(f'orders/history', {'market': market, 'side': side, 'orderType': order_type, 'start_time': start_time, 'end_time': end_time})
-   
+    def get_order_history(self, market: str = None, side: str = None, order_type: str = None, start_time: float = None,
+                          end_time: float = None) -> List[dict]:
+        return self._get(f'orders/history',
+                         {'market': market, 'side': side, 'orderType': order_type, 'start_time': start_time,
+                          'end_time': end_time})
+
     @authentication_required
-    def get_conditional_order_history(self, market: str = None, side: str = None, type: str = None, order_type: str = None, start_time: float = None, end_time: float = None) -> List[dict]:
-        return self._get(f'conditional_orders/history', {'market': market, 'side': side, 'type': type, 'orderType': order_type, 'start_time': start_time, 'end_time': end_time})
+    def get_conditional_order_history(self,
+                                      market: str = None,
+                                      side: str = None,
+                                      type: str = None,
+                                      order_type: str = None,
+                                      start_time: float = None,
+                                      end_time: float = None) -> List[dict]:
+        return self._get(f'conditional_orders/history',
+                         {'market': market, 'side': side, 'type': type, 'orderType': order_type,
+                          'start_time': start_time, 'end_time': end_time})
 
     @authentication_required
     def modify_order(
-        self, existing_order_id: Optional[str] = None,
-        existing_client_order_id: Optional[str] = None, price: Optional[float] = None,
-        size: Optional[float] = None, client_order_id: Optional[str] = None,
+            self, existing_order_id: Optional[str] = None,
+            existing_client_order_id: Optional[str] = None, price: Optional[float] = None,
+            size: Optional[float] = None, client_order_id: Optional[str] = None,
     ) -> dict:
         assert (existing_order_id is None) ^ (existing_client_order_id is None), \
             'Must supply exactly one ID for the order to modify'
@@ -101,7 +114,7 @@ class FtxClient:
         return self._post(path, {
             **({'size': size} if size is not None else {}),
             **({'price': price} if price is not None else {}),
-            ** ({'clientId': client_order_id} if client_order_id is not None else {}),
+            **({'clientId': client_order_id} if client_order_id is not None else {}),
         })
 
     @authentication_required
@@ -113,20 +126,21 @@ class FtxClient:
                     reduce_only: bool = False, ioc: bool = False, post_only: bool = False,
                     client_id: str = None) -> dict:
         return self._post(f'orders', {'market': market,
-                                     'side': side,
-                                     'price': price,
-                                     'size': size,
-                                     'type': type,
-                                     'reduceOnly': reduce_only,
-                                     'ioc': ioc,
-                                     'postOnly': post_only,
-                                     'clientId': client_id,
-                                     })
+                                      'side': side,
+                                      'price': price,
+                                      'size': size,
+                                      'type': type,
+                                      'reduceOnly': reduce_only,
+                                      'ioc': ioc,
+                                      'postOnly': post_only,
+                                      'clientId': client_id,
+                                      })
+
     @authentication_required
     def place_conditional_order(
-        self, market: str, side: str, size: float, type: str = 'stop',
-        limit_price: float = None, reduce_only: bool = False, cancel: bool = True,
-        trigger_price: float = None, trail_value: float = None
+            self, market: str, side: str, size: float, type: str = 'stop',
+            limit_price: float = None, reduce_only: bool = False, cancel: bool = True,
+            trigger_price: float = None, trail_value: float = None
     ) -> dict:
         """
         To send a Stop Market order, set type='stop' and supply a trigger_price
@@ -198,7 +212,7 @@ class FtxClient:
         return self._get(f'subaccounts/{nickname}/balances', {'nickname': nickname})
 
     @authentication_required
-    def request_quote(self, fromCoin, toCoin , size) -> List[dict]:
+    def request_quote(self, fromCoin, toCoin, size) -> List[dict]:
         return self._post(f'otc/quotes', {'fromCoin': fromCoin, 'toCoin': toCoin, 'size': size})
 
     #
@@ -221,7 +235,7 @@ class FtxClient:
         return self._get(f'markets/{market}/orderbook', {'depth': depth})
 
     def get_trades(self, market: str, limit: int = 100, start_time: float = None, end_time: float = None) -> dict:
-        return self._get(f'markets/{market}/trades', {'limit':limit, 'start_time': start_time, 'end_time': end_time})
+        return self._get(f'markets/{market}/trades', {'limit': limit, 'start_time': start_time, 'end_time': end_time})
 
     def get_all_trades(self, market: str, start_time: float = None, end_time: float = None) -> List:
         ids = set()
@@ -243,12 +257,13 @@ class FtxClient:
                 break
         return results
 
-    def get_historical_data(self,market_name: str,resolution: int ,limit: int ,start_time: float ,end_time: float ) -> dict:
-        return self._get(f'markets/{market_name}/candles', dict(resolution=resolution,limit=limit,start_time=start_time,end_time=end_time))
+    def get_historical_data(self, market_name: str, resolution: int, limit: int, start_time: float,
+                            end_time: float) -> dict:
+        return self._get(f'markets/{market_name}/candles',
+                         dict(resolution=resolution, limit=limit, start_time=start_time, end_time=end_time))
 
     def get_future_stats(self, future_name) -> List[dict]:
-        return self._get(f'futures/{future_name}/stats', {'future_name' : future_name})
+        return self._get(f'futures/{future_name}/stats', {'future_name': future_name})
 
     def get_funding_rates(self) -> List[dict]:
         return self._get(f'funding_rates')
-    
