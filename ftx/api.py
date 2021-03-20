@@ -180,8 +180,9 @@ class FtxClient:
         return self._get(f'wallet/balances')
 
     @authentication_required
-    def get_deposit_address(self, ticker: str) -> dict:
-        return self._get(f'wallet/deposit_address/{ticker}')
+    def get_deposit_address(self, ticker: str, method: str = None) -> dict:
+        method = f'?method={method}' if method else ''
+        return self._get(f'wallet/deposit_address/{ticker}{method}')
 
     @authentication_required
     def get_positions(self, show_avg_price: bool = False) -> List[dict]:
@@ -204,16 +205,25 @@ class FtxClient:
         return self._post(f'subaccounts', {'nickname': nickname})
 
     @authentication_required
-    def delete_subaccounts(self, nickname) -> List[dict]:
-        return self._delete(f'subaccounts', {'nickname': nickname})
+    def delete_subaccounts(self, nickname: str = None) -> List[dict]:
+        assert (nickname is not None) or (self._subaccount_name is not None), 'SubAccount not set'
+        subaccount = nickname or self._subaccount_name
+        return self._delete(f'subaccounts', {'nickname': subaccount})
 
     @authentication_required
-    def get_subaccounts_balance(self, nickname) -> List[dict]:
-        return self._get(f'subaccounts/{nickname}/balances', {'nickname': nickname})
+    def get_subaccounts_balance(self, nickname = None) -> List[dict]:
+        assert (nickname is not None) or (self._subaccount_name is not None), 'SubAccount not set'
+        subaccount = nickname or self._subaccount_name
+        return self._get(f'subaccounts/{subaccount}/balances', {'nickname': subaccount})
 
     @authentication_required
     def request_quote(self, fromCoin, toCoin, size) -> List[dict]:
         return self._post(f'otc/quotes', {'fromCoin': fromCoin, 'toCoin': toCoin, 'size': size})
+
+    @authentication_required
+    def request_withdrawal(self, coin: str, size: float, address: str, password: str = None, code: str = None):
+        assert (size > 0), 'Size must be greater than 0'
+        return self._post(f'wallet/withdrawals', {'coin': coin, 'size': size, 'address': address})
 
     #
     # Public methods
