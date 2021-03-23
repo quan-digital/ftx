@@ -156,8 +156,8 @@ class FtxClient:
 
         return self._post(f'conditional_orders',
                           {'market': market, 'side': side, 'triggerPrice': trigger_price,
-                           'size': size, 'reduceOnly': reduce_only, 'type': 'stop',
-                           'cancelLimitOnTrigger': cancel, 'orderPrice': limit_price})
+                           'size': size, 'reduceOnly': reduce_only, 'type': type,
+                           'cancelLimitOnTrigger': cancel, 'orderPrice': limit_price, 'trailValue': trail_value})
 
     @authentication_required
     def cancel_order(self, order_id: str) -> dict:
