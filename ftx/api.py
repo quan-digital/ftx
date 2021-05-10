@@ -84,11 +84,11 @@ class FtxClient:
 
     @authentication_required
     def get_account_info(self) -> dict:
-        return self._get(f'account')
+        return self._get('account')
 
     @authentication_required
     def get_open_orders(self, market: Optional[str] = None) -> List[dict]:
-        return self._get(f'orders', {'market': market})
+        return self._get('orders', {'market': market})
 
     @authentication_required
     def get_order_history(self,
@@ -98,7 +98,7 @@ class FtxClient:
                           start_time: Optional[float] = None,
                           end_time: Optional[float] = None) -> List[dict]:
         return self._get(
-            f'orders/history', {
+            'orders/history', {
                 'market': market,
                 'side': side,
                 'orderType': order_type,
@@ -116,7 +116,7 @@ class FtxClient:
             start_time: Optional[float] = None,
             end_time: Optional[float] = None) -> List[dict]:
         return self._get(
-            f'conditional_orders/history', {
+            'conditional_orders/history', {
                 'market': market,
                 'side': side,
                 'type': type,
@@ -156,7 +156,7 @@ class FtxClient:
     @authentication_required
     def get_conditional_orders(self,
                                market: Optional[str] = None) -> List[dict]:
-        return self._get(f'conditional_orders', {'market': market})
+        return self._get('conditional_orders', {'market': market})
 
     @authentication_required
     def place_order(self,
@@ -170,7 +170,7 @@ class FtxClient:
                     post_only: bool = False,
                     client_id: Optional[str] = None) -> dict:
         return self._post(
-            f'orders', {
+            'orders', {
                 'market': market,
                 'side': side,
                 'price': price,
@@ -206,7 +206,7 @@ class FtxClient:
             'Trailing stops need a trail value and cannot take a trigger price'
 
         return self._post(
-            f'conditional_orders', {
+            'conditional_orders', {
                 'market': market,
                 'side': side,
                 'triggerPrice': trigger_price,
@@ -227,7 +227,7 @@ class FtxClient:
                       conditional_orders: bool = False,
                       limit_orders: bool = False) -> dict:
         return self._delete(
-            f'orders', {
+            'orders', {
                 'market': market_name,
                 'conditionalOrdersOnly': conditional_orders,
                 'limitOrdersOnly': limit_orders,
@@ -235,11 +235,11 @@ class FtxClient:
 
     @authentication_required
     def get_fills(self) -> List[dict]:
-        return self._get(f'fills')
+        return self._get('fills')
 
     @authentication_required
     def get_balances(self) -> List[dict]:
-        return self._get(f'wallet/balances')
+        return self._get('wallet/balances')
 
     @authentication_required
     def get_deposit_address(self,
@@ -250,7 +250,7 @@ class FtxClient:
 
     @authentication_required
     def get_positions(self, show_avg_price: bool = False) -> List[dict]:
-        return self._get(f'positions', {'showAvgPrice': show_avg_price})
+        return self._get('positions', {'showAvgPrice': show_avg_price})
 
     @authentication_required
     def get_position(self, name: str, show_avg_price: bool = False) -> dict:
@@ -260,22 +260,22 @@ class FtxClient:
 
     @authentication_required
     def set_leverage(self, leverage):
-        return self._post(f'account/leverage', {'leverage': leverage})
+        return self._post('account/leverage', {'leverage': leverage})
 
     @authentication_required
     def get_subaccounts(self) -> List[dict]:
-        return self._get(f'subaccounts')
+        return self._get('subaccounts')
 
     @authentication_required
     def create_subaccounts(self, nickname) -> List[dict]:
-        return self._post(f'subaccounts', {'nickname': nickname})
+        return self._post('subaccounts', {'nickname': nickname})
 
     @authentication_required
     def delete_subaccounts(self, nickname: Optional[str] = None) -> List[dict]:
         assert (nickname is not None) or (self._subaccount_name
                                           is not None), 'SubAccount not set'
         subaccount = nickname or self._subaccount_name
-        return self._delete(f'subaccounts', {'nickname': subaccount})
+        return self._delete('subaccounts', {'nickname': subaccount})
 
     @authentication_required
     def get_subaccounts_balance(self, nickname=None) -> List[dict]:
@@ -287,7 +287,7 @@ class FtxClient:
 
     @authentication_required
     def request_quote(self, fromCoin, toCoin, size) -> List[dict]:
-        return self._post(f'otc/quotes', {
+        return self._post('otc/quotes', {
             'fromCoin': fromCoin,
             'toCoin': toCoin,
             'size': size
@@ -301,7 +301,7 @@ class FtxClient:
                            password: Optional[str] = None,
                            code: Optional[str] = None):
         assert (size > 0), 'Size must be greater than 0'
-        return self._post(f'wallet/withdrawals', {
+        return self._post('wallet/withdrawals', {
             'coin': coin,
             'size': size,
             'address': address
@@ -312,13 +312,13 @@ class FtxClient:
     #
 
     def get_futures(self) -> List[dict]:
-        return self._get(f'futures')
+        return self._get('futures')
 
     def get_future(self, future_name: str) -> dict:
         return self._get(f'futures/{future_name}')
 
     def get_markets(self) -> List[dict]:
-        return self._get(f'markets')
+        return self._get('markets')
 
     def get_market(self, market: str) -> dict:
         return self._get(f'markets/{market}')
@@ -376,4 +376,4 @@ class FtxClient:
                          {'future_name': future_name})
 
     def get_funding_rates(self) -> List[dict]:
-        return self._get(f'funding_rates')
+        return self._get('funding_rates')
