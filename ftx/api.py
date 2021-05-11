@@ -379,6 +379,6 @@ class FtxClient:
                                 start_time: Optional[float] = None,
                                 end_time: Optional[float] = None) -> List[dict]:
         return self._get('funding_rates',
-            dict(future=future_name,
+            dict(future=future,
                 start_time=start_time,
                 end_time=end_time))
