@@ -111,7 +111,7 @@ class FtxClient:
             self,
             market: Optional[str] = None,
             side: Optional[str] = None,
-            type: Optiona[str] = None,
+            type: Optional[str] = None,
             order_type: Optional[str] = None,
             start_time: Optional[float] = None,
             end_time: Optional[float] = None) -> List[dict]:
