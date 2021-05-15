@@ -111,7 +111,7 @@ class FtxClient:
             self,
             market: Optional[str] = None,
             side: Optional[str] = None,
-            type: Optiona[str] = None,
+            type: Optional[str] = None,
             order_type: Optional[str] = None,
             start_time: Optional[float] = None,
             end_time: Optional[float] = None) -> List[dict]:
@@ -375,5 +375,10 @@ class FtxClient:
         return self._get(f'futures/{future_name}/stats',
                          {'future_name': future_name})
 
-    def get_funding_rates(self) -> List[dict]:
-        return self._get('funding_rates')
+    def get_funding_rates(self, future: Optional[str] = None,
+                                start_time: Optional[float] = None,
+                                end_time: Optional[float] = None) -> List[dict]:
+        return self._get('funding_rates',
+            dict(future=future,
+                start_time=start_time,
+                end_time=end_time))
