@@ -78,7 +78,7 @@ class FtxClient:
             if not self._api_key:
                 raise TypeError("You must be authenticated to use this method")
             else:
-                return fn(self=self, *args, **kwargs)
+                return fn(self, *args, **kwargs)
 
         return wrapped
 
@@ -111,7 +111,7 @@ class FtxClient:
             self,
             market: Optional[str] = None,
             side: Optional[str] = None,
-            type: Optiona[str] = None,
+            type: Optional[str] = None,
             order_type: Optional[str] = None,
             start_time: Optional[float] = None,
             end_time: Optional[float] = None) -> List[dict]:
@@ -292,6 +292,14 @@ class FtxClient:
             'toCoin': toCoin,
             'size': size
         })
+
+    @authentication_required
+    def get_quote_details(self, quoteId):
+        return self._get(f'otc/quotes/{quoteId}')
+
+    @authentication_required
+    def accept_quote(self, quoteId):
+        return self._post(f'otc/quotes/{quoteId}/accept')
 
     @authentication_required
     def request_withdrawal(self,
