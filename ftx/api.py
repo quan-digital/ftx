@@ -90,7 +90,7 @@ class FtxClient:
         return self._get('orders', {'market': market})
 
     @authentication_required
-    def get_order_status(self, existing_order_id: int) -> List[dict]:
+    def get_order_status(self, existing_order_id: int) -> dict:
         return self._get(f'orders/{existing_order_id}')
 
     @authentication_required
