@@ -297,6 +297,14 @@ class FtxClient:
         })
 
     @authentication_required
+    def get_quote_details(self, quoteId):
+        return self._get(f'otc/quotes/{quoteId}')
+
+    @authentication_required
+    def accept_quote(self, quoteId):
+        return self._post(f'otc/quotes/{quoteId}/accept')
+
+    @authentication_required
     def request_withdrawal(self,
                            coin: str,
                            size: float,
