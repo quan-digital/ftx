@@ -71,14 +71,13 @@ class FtxClient:
     #
     # Authentication required methods
     #
-
     def authentication_required(fn):
         """Annotation for methods that require auth."""
         def wrapped(self, *args, **kwargs):
             if not self._api_key:
                 raise TypeError("You must be authenticated to use this method")
             else:
-                return fn(self=self, *args, **kwargs)
+                return fn(self, *args, **kwargs)
 
         return wrapped
 
@@ -89,6 +88,10 @@ class FtxClient:
     @authentication_required
     def get_open_orders(self, market: Optional[str] = None) -> List[dict]:
         return self._get('orders', {'market': market})
+
+    @authentication_required
+    def get_order_status(self, existing_order_id: int) -> dict:
+        return self._get(f'orders/{existing_order_id}')
 
     @authentication_required
     def get_order_history(self,
