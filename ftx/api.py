@@ -393,3 +393,13 @@ class FtxClient:
             dict(future=future,
                 start_time=start_time,
                 end_time=end_time))
+
+    # leveraged tokens
+
+    def list_lts(self) -> List[dict]:
+        return self._get(f'lt/tokens')
+
+    def get_lt_info(self, market: str) -> dict:
+        return self._get(f'lt/{market}')
+
+    
