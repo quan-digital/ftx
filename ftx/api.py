@@ -385,3 +385,9 @@ class FtxClient:
             dict(future=future,
                 start_time=start_time,
                 end_time=end_time))
+
+    def get_levered_tokens(self) -> List[dict]:
+        return self._get('lt/tokens')
+
+    def get_token_rebalances(self, token: str) -> List[dict]:
+        return self._get(f'lt/{token.upper()}/major_rebalances')
