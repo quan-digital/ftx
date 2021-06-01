@@ -372,9 +372,12 @@ class FtxClient:
                 break
         return results
 
-    def get_historical_data(self, market_name: str, resolution: int,
-                            limit: int, start_time: float,
-                            end_time: float) -> dict:
+    def get_historical_data(self,
+                            market_name: str, 
+                            resolution: int,
+                            limit: int, 
+                            start_time: Optional[float] = None,
+                            end_time: Optional[float] = None) -> dict:
         return self._get(
             f'markets/{market_name}/candles',
             dict(resolution=resolution,
