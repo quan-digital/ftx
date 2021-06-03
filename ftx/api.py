@@ -372,9 +372,12 @@ class FtxClient:
                 break
         return results
 
-    def get_historical_data(self, market_name: str, resolution: int,
-                            limit: int, start_time: float,
-                            end_time: float) -> dict:
+    def get_historical_data(self,
+                            market_name: str, 
+                            resolution: int,
+                            limit: int, 
+                            start_time: Optional[float] = None,
+                            end_time: Optional[float] = None) -> dict:
         return self._get(
             f'markets/{market_name}/candles',
             dict(resolution=resolution,
@@ -393,3 +396,13 @@ class FtxClient:
             dict(future=future,
                 start_time=start_time,
                 end_time=end_time))
+
+    # leveraged tokens
+
+    def list_lts(self) -> List[dict]:
+        return self._get(f'lt/tokens')
+
+    def get_lt_info(self, market: str) -> dict:
+        return self._get(f'lt/{market}')
+
+    
