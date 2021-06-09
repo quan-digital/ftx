@@ -237,8 +237,13 @@ class FtxClient:
             })
 
     @authentication_required
-    def get_fills(self) -> List[dict]:
-        return self._get('fills')
+    def get_fills(self,
+                  start_time: Optional[float] = None,
+                  end_time: Optional[float] = None) -> List[dict]:
+        return self._get('fills', {
+            'start_time': start_time,
+            'end_time':end_time
+            })
 
     @authentication_required
     def get_balances(self) -> List[dict]:
