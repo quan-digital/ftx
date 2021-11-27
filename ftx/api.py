@@ -193,7 +193,6 @@ class FtxClient:
                                 type: str,
                                 limit_price: Optional[float] = None,
                                 reduce_only: bool = False,
-                                cancel: bool = True,
                                 trigger_price: Optional[float] = None,
                                 trail_value: Optional[float] = None) -> dict:
         """
@@ -216,7 +215,6 @@ class FtxClient:
                 'size': size,
                 'reduceOnly': reduce_only,
                 'type': type,
-                'cancelLimitOnTrigger': cancel,
                 'orderPrice': limit_price
             })
 
