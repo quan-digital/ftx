@@ -215,7 +215,8 @@ class FtxClient:
                 'size': size,
                 'reduceOnly': reduce_only,
                 'type': type,
-                'orderPrice': limit_price
+                'orderPrice': limit_price,
+                'trailValue': trail_value
             })
 
     @authentication_required
