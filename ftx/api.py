@@ -73,6 +73,7 @@ class FtxClient:
     #
     def authentication_required(fn):
         """Annotation for methods that require auth."""
+
         def wrapped(self, *args, **kwargs):
             if not self._api_key:
                 raise TypeError("You must be authenticated to use this method")
@@ -264,7 +265,7 @@ class FtxClient:
                   end_time: Optional[float] = None) -> List[dict]:
         return self._get('fills', {
             'start_time': start_time,
-            'end_time':end_time
+            'end_time': end_time
             })
 
     @authentication_required
@@ -336,13 +337,19 @@ class FtxClient:
                            coin: str,
                            size: float,
                            address: str,
+                           tag: Optional[str] = None,
+                           method: Optional[str] = None,
                            password: Optional[str] = None,
                            code: Optional[str] = None):
         assert (size > 0), 'Size must be greater than 0'
         return self._post('wallet/withdrawals', {
             'coin': coin,
             'size': size,
-            'address': address
+            'address': address,
+            'tag': tag,
+            'method': method,
+            'password': password,
+            'code': code
         })
 
     #
@@ -400,9 +407,9 @@ class FtxClient:
         return results
 
     def get_historical_data(self,
-                            market_name: str, 
+                            market_name: str,
                             resolution: int,
-                            limit: int, 
+                            limit: int,
                             start_time: Optional[float] = None,
                             end_time: Optional[float] = None) -> dict:
         return self._get(
