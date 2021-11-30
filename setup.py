@@ -8,14 +8,14 @@ here = dirname(__file__)
 
 setup(
     name='ftx',
-    version='1.0.2',
-    description="Unofficial python3 FTX exchange API 1.0.2",
+    version='1.2.0',
+    description="Unofficial python3 FTX exchange API 1.2.0",
     long_description=open(join(here, 'README.md')).read(),
     license='MIT',
     author='thomgabriel',
     author_email='thomgabriel@protonmail.com',
-    url='https://github.com/quan-digital/ftx/tree/v1.1',
-    download_url='https://github.com/quan-digital/ftx/archive/v1.1.tar.gz',
+    url='https://github.com/quan-digital/ftx/tree/v1.2',
+    download_url='https://github.com/quan-digital/ftx/archive/v1.2.tar.gz',
     install_requires=['requests', 'ciso8601'],
     packages=find_packages(),
     keywords=[
