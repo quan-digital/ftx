@@ -193,9 +193,10 @@ class FtxClient:
                                 type: str,
                                 limit_price: Optional[float] = None,
                                 reduce_only: bool = False,
-                                cancel: bool = True,
                                 trigger_price: Optional[float] = None,
-                                trail_value: Optional[float] = None) -> dict:
+                                trail_value: Optional[float] = None,
+                                retry_until_filled: bool = None,
+                                ) -> dict:
         """
         To send a Stop Market order, set type='stop' and supply a trigger_price
         To send a Stop Limit order, also supply a limit_price
@@ -216,8 +217,9 @@ class FtxClient:
                 'size': size,
                 'reduceOnly': reduce_only,
                 'type': type,
-                'cancelLimitOnTrigger': cancel,
-                'orderPrice': limit_price
+                'orderPrice': limit_price,
+                'trailValue': trail_value,
+                'retryUntilFilled': retry_until_filled
             })
 
     @authentication_required
