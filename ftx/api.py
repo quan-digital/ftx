@@ -243,6 +243,22 @@ class FtxClient:
             })
 
     @authentication_required
+    def get_lending_rates(self) -> dict:
+        return self._get(f"spot_margin/lending_rates")
+
+    @authentication_required
+    def get_borrow_rates(self) -> dict:
+        return self._get(f"spot_margin/borrow_rates")
+
+    @authentication_required
+    def get_borrow_summary(self) -> dict:
+        return self._get(f"spot_margin/borrow_summary")
+
+    @authentication_required
+    def get_market_info(self, market_name: Optional[str] = None) -> dict:
+        return self._get(f"spot_margin/market_info?market={market_name}")
+
+    @authentication_required
     def get_fills(self,
                   start_time: Optional[float] = None,
                   end_time: Optional[float] = None) -> List[dict]:
