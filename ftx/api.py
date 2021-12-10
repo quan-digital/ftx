@@ -198,7 +198,7 @@ class FtxClient:
                                 reduce_only: bool = False,
                                 trigger_price: Optional[float] = None,
                                 trail_value: Optional[float] = None,
-                                retry_until_filled: bool = None,
+                                retry_until_filled: Optional[bool] = None,
                                 ) -> dict:
         """
         To send a Stop Market order, set type='stop' and supply a trigger_price
