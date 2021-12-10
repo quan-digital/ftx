@@ -172,7 +172,8 @@ class FtxClient:
                     reduce_only: bool = False,
                     ioc: bool = False,
                     post_only: bool = False,
-                    client_id: Optional[str] = None) -> dict:
+                    client_id: Optional[str] = None,
+                    reject_on_price_band: Optional[bool] = None) -> dict:
         return self._post(
             'orders', {
                 'market': market,
@@ -184,6 +185,7 @@ class FtxClient:
                 'ioc': ioc,
                 'postOnly': post_only,
                 'clientId': client_id,
+                'rejectOnPriceBand': reject_on_price_band
             })
 
     @authentication_required
