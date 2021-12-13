@@ -172,7 +172,8 @@ class FtxClient:
                     reduce_only: bool = False,
                     ioc: bool = False,
                     post_only: bool = False,
-                    client_id: Optional[str] = None) -> dict:
+                    client_id: Optional[str] = None,
+                    reject_on_price_band: Optional[bool] = None) -> dict:
         return self._post(
             'orders', {
                 'market': market,
@@ -184,6 +185,7 @@ class FtxClient:
                 'ioc': ioc,
                 'postOnly': post_only,
                 'clientId': client_id,
+                'rejectOnPriceBand': reject_on_price_band
             })
 
     @authentication_required
@@ -196,7 +198,7 @@ class FtxClient:
                                 reduce_only: bool = False,
                                 trigger_price: Optional[float] = None,
                                 trail_value: Optional[float] = None,
-                                retry_until_filled: bool = None,
+                                retry_until_filled: Optional[bool] = None,
                                 ) -> dict:
         """
         To send a Stop Market order, set type='stop' and supply a trigger_price
