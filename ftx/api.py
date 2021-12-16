@@ -264,11 +264,15 @@ class FtxClient:
     @authentication_required
     def get_fills(self,
                   start_time: Optional[float] = None,
-                  end_time: Optional[float] = None) -> List[dict]:
+                  end_time: Optional[float] = None,
+                  order: Optional[float] = None,
+                  orderId: Optional[float] = None) -> List[dict]:
         return self._get('fills', {
             'start_time': start_time,
-            'end_time': end_time
-            })
+            'end_time': end_time,
+            'order': order,
+            'orderId': orderId
+        })
 
     @authentication_required
     def get_balances(self) -> List[dict]:
