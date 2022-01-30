@@ -6,6 +6,8 @@ from typing import Optional, Dict, Any, List
 from ciso8601 import parse_datetime
 from requests import Request, Session, Response
 
+from ftx.wsapi import FtxWebSocketClient
+
 
 class FtxClient:
     def __init__(
@@ -20,6 +22,7 @@ class FtxClient:
         self._api_key = api_key
         self._api_secret = api_secret
         self._subaccount_name = subaccount_name
+        self._ws_client = None
 
     def _get(self, path: str, params: Optional[Dict[str, Any]] = None) -> Any:
         return self._request('GET', path, params=params)
@@ -55,6 +58,21 @@ class FtxClient:
         if self._subaccount_name:
             request.headers['FTX-SUBACCOUNT'] = urllib.parse.quote(
                 self._subaccount_name)
+
+    @property
+    def websockets(self) -> FtxWebSocketClient:
+        """
+        Lazy FtxWebSocketClient with the same credentials
+
+        :return: FtxWebSocketClient
+        """
+        if not self._ws_client:
+            self._ws_client = FtxWebSocketClient(
+                api_key=self._api_key,
+                api_secret=self._api_secret,
+                subaccount_name=self._subaccount_name
+            )
+        return self._ws_client
 
     @staticmethod
     def _process_response(response: Response) -> Any:

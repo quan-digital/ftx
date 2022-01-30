@@ -18,7 +18,7 @@ The next thing you need to do is import the library and get an instance of the c
     import ftx
     client = ftx.FtxClient()
 
-### Get ordedrbook
+### Get orderbook
 
 Get the orderbook levels of bid/ask:
 
@@ -34,7 +34,7 @@ Get the orderbook levels of bid/ask:
     >>> result['bids']
     [[11860.5, 0.1]]
 
-### Market's Instrument data
+### Market's instrument data
 
 The API supports fetching full data for one or multiple markets.
 
