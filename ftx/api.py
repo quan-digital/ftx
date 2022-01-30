@@ -60,7 +60,7 @@ class FtxClient:
                 self._subaccount_name)
 
     @property
-    def websockets(self) -> FtxWebSocketClient:
+    def websocket(self) -> FtxWebSocketClient:
         """
         Lazy FtxWebSocketClient with the same credentials
 
