@@ -197,6 +197,7 @@ class FtxClient:
                                 limit_price: Optional[float] = None,
                                 reduce_only: bool = False,
                                 trigger_price: Optional[float] = None,
+                                orderPrice:    Optional[float] = None,
                                 trail_value: Optional[float] = None,
                                 retry_until_filled: Optional[bool] = None,
                                 ) -> dict:
