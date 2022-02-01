@@ -16,6 +16,7 @@ class FtxClient:
         api_key: Optional[str] = None,
         api_secret: Optional[str] = None,
         subaccount_name: Optional[str] = None,
+        ws_max_queue_size: int = 1024
     ) -> None:
         self._session = Session()
         self._base_url = base_url
@@ -23,6 +24,7 @@ class FtxClient:
         self._api_secret = api_secret
         self._subaccount_name = subaccount_name
         self._ws_client = None
+        self._ws_max_queue_size = ws_max_queue_size
 
     def _get(self, path: str, params: Optional[Dict[str, Any]] = None) -> Any:
         return self._request('GET', path, params=params)
@@ -70,7 +72,8 @@ class FtxClient:
             self._ws_client = FtxWebSocketClient(
                 api_key=self._api_key,
                 api_secret=self._api_secret,
-                subaccount_name=self._subaccount_name
+                subaccount_name=self._subaccount_name,
+                max_queue_size=self._ws_max_queue_size
             )
         return self._ws_client
 

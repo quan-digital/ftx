@@ -4,21 +4,24 @@ from ftx import FtxClient
 
 
 async def main():
-    ftx = FtxClient()
+    ftx = FtxClient(ws_max_queue_size=16)
     # connect the websocket
     await ftx.websocket.connect()
 
-    first_market = ftx.get_markets()[0]
-    # subscribe to the trades channel of first available market
-    await ftx.websocket.subscribe('trades', first_market['name'])
+    # subscribe to the trades channel
+    await ftx.websocket.subscribe('trades', 'BTC-PERP')
 
-    while ftx.websocket.connected:
+    trades = []
+    while ftx.websocket.connected and len(trades) < 10:
         # block and wait for next message
         msg = await ftx.websocket.recv()
         if 'channel' in msg and msg['channel'] == 'trades':
             if 'data' in msg:
                 # print trade
-                print(msg['market'], msg['data'][0]['side'], msg['data'][0]['size'])
+                print(ftx.websocket.messages_dropped, 'messages dropped, price:', msg['data'][0]['price'])
+
+    if ftx.websocket.connected:
+        await ftx.websocket.disconnect()
 
 
 if __name__ == '__main__':

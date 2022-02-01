@@ -2,10 +2,14 @@ import asyncio
 import hmac
 import json
 import time
+import traceback
+from json import JSONDecodeError
 from typing import Optional
 
 import websockets
 from websockets.legacy.client import WebSocketClientProtocol
+
+from ftx.fifo import AsyncFifoQueue
 
 
 class FtxWebSocketClient:
@@ -20,11 +24,17 @@ class FtxWebSocketClient:
                  api_key: Optional[str] = None,
                  api_secret: Optional[str] = None,
                  subaccount_name: Optional[str] = None,
+                 max_queue_size: int = 1024,
                  socket_url='wss://ftx.com/ws',
                  verbose=False):
         """
         Create a websocket client
 
+        :param api_key: api key
+        :param api_secret: api secret
+        :param subaccount_name: subaccount
+        :param max_queue_size: max size for message queue
+        :param socket_url: ftx websocket url
         :param verbose: set to True to log messages and connection status
         """
         self._api_key = api_key
@@ -34,7 +44,7 @@ class FtxWebSocketClient:
         self._last_ping = None
         self.verbose = verbose
         self.socket_url = socket_url
-        self._queue = asyncio.Queue(maxsize=0)
+        self._queue = AsyncFifoQueue(maxsize=max_queue_size)
 
     async def connect(self):
         """
@@ -46,12 +56,25 @@ class FtxWebSocketClient:
         asyncio.create_task(self._loop_fn())
         asyncio.create_task(self._ping_loop_fn())
 
+    async def disconnect(self):
+        """
+        Disconnect the websocket
+        :return:
+        """
+        if self._ws:
+            await self._ws.close()
+            self._ws = None
+
     @property
     def connected(self):
         """
         True if the websocket is connected and open
         """
         return self._ws and self._ws.open
+
+    @property
+    def messages_dropped(self):
+        return self._queue.items_dropped
 
     def _log(self, *args, **kwargs):
         if self.verbose:
@@ -93,12 +116,19 @@ class FtxWebSocketClient:
         """
         Main message loop
         """
-        while self._ws.open:
-            msg = await self._ws.recv()
+        while self.connected:
             try:
-                self._on_message(json.loads(msg))
-            except:
-                print('could not parse JSON', msg)
+                msg = await self._ws.recv()
+                try:
+                    self._on_message(json.loads(msg))
+                except JSONDecodeError:
+                    print('could not parse JSON', msg)
+            except websockets.ConnectionClosedOK:
+                self._ws = None
+            except websockets.ConnectionClosedError:
+                self._ws = None
+                print('websocket closed with error')
+                traceback.print_exc()
 
     async def login(self):
         assert self._api_key and self._api_secret, 'api_key and api_secret must be set to use login()'
