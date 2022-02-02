@@ -102,10 +102,10 @@ class FtxWebSocketClient:
 
     async def _ping_loop_fn(self):
         """
-        Ping keep-alive loop
+        Ping keep-alive loop, sends a ping message every 15 seconds
         """
         await asyncio.sleep(1)
-        while self._ws.open:
+        while self.connected:
             if not self._last_ping:
                 self._log('ping')
             self._last_ping = time.time()
@@ -125,7 +125,7 @@ class FtxWebSocketClient:
                     print('could not parse JSON', msg)
             except websockets.ConnectionClosedOK:
                 self._ws = None
-            except websockets.ConnectionClosedError:
+            except Exception:
                 self._ws = None
                 print('websocket closed with error')
                 traceback.print_exc()
