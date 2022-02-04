@@ -123,10 +123,9 @@ class FtxWebSocketClient:
                     self._on_message(json.loads(msg))
                 except JSONDecodeError:
                     print('could not parse JSON', msg)
-            except websockets.ConnectionClosedOK:
+            except:
                 self._ws = None
-            except Exception:
-                self._ws = None
+                self._queue.put_nowait(None)
                 print('websocket closed with error')
                 traceback.print_exc()
 
@@ -165,9 +164,12 @@ class FtxWebSocketClient:
 
     async def recv(self):
         """
-        Receives a single message from the websocket or waits until one is available
+        Receives a single message from the websocket or waits until one is available.
+        `None` is returned when the websocket is closed or closing.
 
         :return: a message dict
         """
+        if not self.connected:
+            return None
         return await self._queue.get()
 

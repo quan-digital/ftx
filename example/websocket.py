@@ -15,7 +15,7 @@ async def main():
     while ftx.websocket.connected and len(trades) < 10:
         # block and wait for next message
         msg = await ftx.websocket.recv()
-        if 'channel' in msg and msg['channel'] == 'trades':
+        if msg and 'channel' in msg and msg['channel'] == 'trades':
             if 'data' in msg:
                 # print trade
                 print(ftx.websocket.messages_dropped, 'messages dropped, price:', msg['data'][0]['price'])
