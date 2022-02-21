@@ -218,6 +218,7 @@ class FtxClient:
                                 limit_price: Optional[float] = None,
                                 reduce_only: bool = False,
                                 trigger_price: Optional[float] = None,
+                                orderPrice:    Optional[float] = None,
                                 trail_value: Optional[float] = None,
                                 retry_until_filled: Optional[bool] = None,
                                 ) -> dict:
@@ -285,11 +286,15 @@ class FtxClient:
     @authentication_required
     def get_fills(self,
                   start_time: Optional[float] = None,
-                  end_time: Optional[float] = None) -> List[dict]:
+                  end_time: Optional[float] = None,
+                  order: Optional[float] = None,
+                  orderId: Optional[float] = None) -> List[dict]:
         return self._get('fills', {
             'start_time': start_time,
-            'end_time': end_time
-            })
+            'end_time': end_time,
+            'order': order,
+            'orderId': orderId
+        })
 
     @authentication_required
     def get_balances(self) -> List[dict]:
