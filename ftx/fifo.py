@@ -2,6 +2,9 @@ import asyncio as asyncio
 
 
 class AsyncFifoQueue(asyncio.Queue):
+    """
+    FIFO Queue that counts the dropped items
+    """
     def __init__(self, *args, **kwargs):
         self._queue = None
         self.items_dropped = 0

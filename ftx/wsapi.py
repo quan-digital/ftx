@@ -24,7 +24,7 @@ class FtxWebSocketClient:
                  api_key: Optional[str] = None,
                  api_secret: Optional[str] = None,
                  subaccount_name: Optional[str] = None,
-                 max_queue_size: int = 1024,
+                 queue_size: int = 1024,
                  socket_url='wss://ftx.com/ws',
                  verbose=False):
         """
@@ -33,7 +33,7 @@ class FtxWebSocketClient:
         :param api_key: api key
         :param api_secret: api secret
         :param subaccount_name: subaccount
-        :param max_queue_size: max size for message queue
+        :param queue_size: size for message queue
         :param socket_url: ftx websocket url
         :param verbose: set to True to log messages and connection status
         """
@@ -44,7 +44,7 @@ class FtxWebSocketClient:
         self._last_ping = None
         self.verbose = verbose
         self.socket_url = socket_url
-        self._queue = AsyncFifoQueue(maxsize=max_queue_size)
+        self._queue = AsyncFifoQueue(maxsize=queue_size)
 
     async def connect(self):
         """
@@ -58,10 +58,10 @@ class FtxWebSocketClient:
 
     async def disconnect(self):
         """
-        Disconnect the websocket
+        Disconnects the websocket if it's open
         :return:
         """
-        if self._ws:
+        if self._ws and self._ws.open:
             await self._ws.close()
             self._ws = None
 
@@ -74,6 +74,11 @@ class FtxWebSocketClient:
 
     @property
     def messages_dropped(self):
+        """
+        The amount of messages dropped due to the queue being full.
+        Increase max_queue_size or try to process messages faster if messages get dropped.
+        :return:
+        """
         return self._queue.items_dropped
 
     def _log(self, *args, **kwargs):
