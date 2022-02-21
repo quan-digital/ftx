@@ -86,3 +86,32 @@ Orders can be modified by providing the original order ID.
 An order can be canceled given the order ID:
 
     client.cancel_order(9596912).result()
+
+
+## WebSocket usage
+Websocket can be used to subscribe to realtime updates on several channels as described in the [FTX websocket documentation](https://docs.ftx.com/#public-channels).
+
+The `websocket` property on the FtxClient can be used to connect a websocket with the same credentials as the FtxClient object.
+To connect using different credentials instantiate a new websocket client using the `FtxWebSocketClient` constructor.
+
+
+**Example subscription to trade channel**
+```python
+async def main():
+    ftx = FtxClient(ws_queue_size=16)
+    # connect the websocket
+    await ftx.websocket.connect()
+
+    # subscribe to a channel
+    await ftx.websocket.subscribe('trades', 'BTC-PERP')
+
+    while ftx.websocket.connected:
+        # block and wait for next message
+        msg = await ftx.websocket.recv()
+        if msg and 'channel' in msg and msg['channel'] == 'trades':
+            if 'data' in msg:
+                # print the trade price
+                print('price:', msg['data'][0]['price'])
+
+    await ftx.websocket.disconnect()
+```
