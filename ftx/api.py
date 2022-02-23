@@ -173,7 +173,7 @@ class FtxClient:
                     ioc: bool = False,
                     post_only: bool = False,
                     client_id: Optional[str] = None,
-                    reject_on_price_band: Optional[bool] = None,
+                    # reject_on_price_band: Optional[bool] = None,
                     reject_After_Ts: Optional[float] = None) -> dict:
         return self._post(
             'orders', {
@@ -186,7 +186,7 @@ class FtxClient:
                 'ioc': ioc,
                 'postOnly': post_only,
                 'clientId': client_id,
-                'rejectOnPriceBand': reject_on_price_band,
+                # 'rejectOnPriceBand': reject_on_price_band,
                 'rejectAfterTs': reject_After_Ts
             })
 
