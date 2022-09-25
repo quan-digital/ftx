@@ -16,7 +16,7 @@ setup(
     author_email='thomgabriel@protonmail.com',
     url='https://github.com/quan-digital/ftx/tree/v1.2',
     download_url='https://github.com/quan-digital/ftx/archive/v1.2.tar.gz',
-    install_requires=['requests', 'ciso8601'],
+    install_requires=['requests', 'ciso8601', 'websocket-client'],
     packages=find_packages(),
     keywords=[
         'ftx', 'bitcoin', 'crypto-api', 'api-connector', 'exchange-api',
